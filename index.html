@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generator Soal SD + AKM + Kunci Jawaban | by Abu Rahmi</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+    color: #1e293b;
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header {
+    background: linear-gradient(135deg, #1e40af 0%, #059669 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+  }
+  header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+  header p { opacity: 0.95; font-size: 0.95rem; }
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 180px;
+    padding: 14px 18px;
+    background: white;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #475569;
+    transition: all 0.25s;
+  }
+  .tab-btn:hover { border-color: #2563eb; color: #2563eb; transform: translateY(-2px); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, #2563eb, #059669);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.3);
+  }
+  .tab-content {
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    display: none;
+  }
+  .tab-content.active { display: block; animation: fadeIn 0.4s; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  h2 { color: #1e40af; margin-bottom: 18px; font-size: 1.3rem; border-bottom: 3px solid #10b981; padding-bottom: 8px; }
+  h3 { color: #059669; margin: 18px 0 10px; font-size: 1.05rem; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; margin-bottom: 15px; }
+  label { display: block; font-weight: 600; margin-bottom: 6px; color: #334155; font-size: 0.9rem; }
+  select, input, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border 0.2s;
+  }
+  select:focus, input:focus, textarea:focus { outline: none; border-color: #2563eb; }
+  textarea { resize: vertical; min-height: 80px; }
+  .btn {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 5px 5px 5px 0;
+  }
+  .btn-primary { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; }
+  .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+  .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+  .btn-secondary { background: #64748b; color: white; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+  .output-box {
+    background: #f8fafc;
+    border: 2px dashed #94a3b8;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 15px;
+    min-height: 100px;
+    white-space: pre-wrap;
+    font-family: 'Consolas', monospace;
+    font-size: 0.88rem;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  .key-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 0;
+    padding: 14px;
+    background: #f0fdf4;
+    border-radius: 10px;
+    border: 2px solid #10b981;
+  }
+  .key-item {
+    background: white;
+    border: 2px solid #10b981;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+  .key-item .num { color: #64748b; font-size: 0.75rem; margin-right: 4px; }
+  .recap-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  .recap-table th, .recap-table td { padding: 10px; border: 1px solid #e2e8f0; text-align: center; }
+  .recap-table th { background: #1e40af; color: white; }
+  .recap-table tr:nth-child(even) { background: #f8fafc; }
+  .review-item {
+    padding: 10px 14px;
+    margin: 6px 0;
+    border-radius: 8px;
+    border-left: 4px solid;
+    font-size: 0.9rem;
+  }
+  .review-pass { background: #f0fdf4; border-color: #10b981; color: #065f46; }
+  .review-fail { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+  .review-warn { background: #fffbeb; border-color: #f59e0b; color: #92400e; }
+  .info-box {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 12px 0;
+    font-size: 0.9rem;
+    color: #1e3a8a;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+  .badge-success { background: #10b981; color: white; }
+  .badge-danger { background: #ef4444; color: white; }
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #10b981;
+    color: white;
+    padding: 14px 22px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+    z-index: 1000;
+    font-weight: 600;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  footer { text-align: center; padding: 20px; color: #64748b; font-size: 0.85rem; }
+  @media (max-width: 640px) {
+    header h1 { font-size: 1.3rem; }
+    .tab-btn { min-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>🎯 Generator Soal SD + AKM + Kunci Jawaban</h1>
+    <p>Versi Sempurna | Sesuai Kaidah BSNP/Puspendik | by Abu Rahmi</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(1)">📋 1. Generator Prompt</button>
+    <button class="tab-btn" onclick="switchTab(2)">🔑 2. Generator Kunci Jawaban</button>
+    <button class="tab-btn" onclick="switchTab(3)">✨ 3. Prompt Final Gabungan</button>
+  </div>
+
+  <!-- ============== TAB 1: GENERATOR PROMPT ============== -->
+  <div id="tab1" class="tab-content active">
+    <h2>📋 Konfigurasi Soal & Prompt</h2>
+
+    <div class="form-grid">
+      <div>
+        <label>📚 Mata Pelajaran</label>
+        <select id="mapel">
+          <option>Pendidikan Agama Islam (PAI)</option>
+          <option>PPKn</option>
+          <option>Bahasa Indonesia</option>
+          <option>IPAS (IPA+IPS)</option>
+          <option>Matematika</option>
+          <option>PJOK</option>
+          <option>Seni Budaya dan Prakarya</option>
+          <option>Bahasa Inggris</option>
+          <option>Koding dan Kecerdasan Artifisial (KKA)</option>
+          <option>Mulok BTA-Arab Melayu</option>
+        </select>
+      </div>
+      <div>
+        <label>🏫 Kelas</label>
+        <select id="kelas">
+          <option>Kelas 1 SD</option><option>Kelas 2 SD</option>
+          <option>Kelas 3 SD</option><option>Kelas 4 SD</option>
+          <option>Kelas 5 SD</option><option>Kelas 6 SD</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label>📘 Bab / Materi</label>
+      <input type="text" id="bab" placeholder="Contoh: Bab 3 - Operasi Hitung Perkalian & Pembagian">
+    </div>
+
+    <div style="margin-top:12px;">
+      <label>🎯 Tujuan Pembelajaran (ATP)</label>
+      <textarea id="atp" placeholder="Contoh: Siswa mampu menyelesaikan soal perkalian bilangan dua angka, menerapkan dalam kehidupan sehari-hari, serta menganalisis pola perkalian."></textarea>
+    </div>
+
+    <h3>✏️ Jumlah Soal Reguler</h3>
+    <div class="form-grid">
+      <div>
+        <label>Pilihan Ganda (PG)</label>
+        <select id="jmlPG">
+          <option value="0">0</option><option value="5">5</option>
+          <option value="10">10</option><option value="15">15</option>
+          <option value="20" selected>20</option><option value="25">25</option>
+          <option value="30">30</option><option value="40">40</option>
+        </select>
+      </div>
+      <div>
+        <label>Isian Singkat</label>
+        <select id="jmlIsian">
+          <option value="0">0</option><option value="5" selected>5</option><option value="10">10</option>
+        </select>
+      </div>
+      <div>
+        <label>Essay / Uraian</label>
+        <select id="jmlEssay">
+          <option value="0">0</option><option value="5" selected>5</option><option value="10">10</option>
+        </select>
+      </div>
+    </div>
+
+    <h3>📊 Jumlah Soal AKM</h3>
+    <div class="form-grid">
+      <div>
+        <label>AKM Pilihan Ganda</label>
+        <select id="jmlAKMPG">
+          <option value="0" selected>0</option><option value="5">5</option><option value="10">10</option>
+        </select>
+      </div>
+      <div>
+        <label>AKM Isian</label>
+        <select id="jmlAKMIsian">
+          <option value="0" selected>0</option><option value="5">5</option>
+        </select>
+      </div>
+      <div>
+        <label>AKM Essay</label>
+        <select id="jmlAKMEssay">
+          <option value="0" selected>0</option><option value="5">5</option>
+        </select>
+      </div>
+    </div>
+
+    <h3>🧠 Distribusi Level Kognitif (Total = Jumlah Semua Soal)</h3>
+    <div class="info-box">💡 Kosongkan untuk distribusi otomatis seimbang (L1 40% : L2 40% : L3 20%)</div>
+    <div class="form-grid">
+      <div><label>L1 (Pengetahuan & Pemahaman)</label><input type="number" id="l1" min="0" placeholder="Otomatis"></div>
+      <div><label>L2 (Aplikasi)</label><input type="number" id="l2" min="0" placeholder="Otomatis"></div>
+      <div><label>L3 (Penalaran)</label><input type="number" id="l3" min="0" placeholder="Otomatis"></div>
+    </div>
+
+    <div style="margin-top:20px; text-align:center;">
+      <button class="btn btn-primary" onclick="generatePrompt()">✨ Generate Prompt + Review Kaidah</button>
+      <button class="btn btn-secondary" onclick="resetForm()">🔄 Reset</button>
+    </div>
+
+    <div id="promptOutput"></div>
+  </div>
+
+  <!-- ============== TAB 2: GENERATOR KUNCI JAWABAN ============== -->
+  <div id="tab2" class="tab-content">
+    <h2>🔑 Generator Deret Kunci Jawaban</h2>
+    <div class="info-box">
+      ✦ <b>Rumus Kesepakatan:</b> Distribusi merata | Maks 2 huruf sama berurutan | Hindari pola selang-seling (ABAB) | Hindari urutan alfabet naik/turun (ABC/CBA) | Sebaran merata tiap blok 10 soal.
+    </div>
+
+    <div class="form-grid">
+      <div>
+        <label>Jumlah Opsi Jawaban</label>
+        <select id="optCount" onchange="updateKeyInputs()">
+          <option value="3">3 Opsi (A, B, C)</option>
+          <option value="4" selected>4 Opsi (A, B, C, D)</option>
+          <option value="5">5 Opsi (A, B, C, D, E)</option>
+        </select>
+      </div>
+      <div>
+        <label>Jumlah Soal PG</label>
+        <input type="number" id="totalSoal" value="10" min="1" max="100" onchange="autoDistribute()">
+      </div>
+    </div>
+
+    <h3>📌 Pengaturan Jumlah Tiap Huruf (Otomatis / Manual)</h3>
+    <div id="keyInputs" class="form-grid"></div>
+
+    <div style="margin-top:15px; text-align:center;">
+      <button class="btn btn-success" onclick="generateKey()">🎲 Buat / Acak Kunci</button>
+      <button class="btn btn-warning" onclick="autoDistribute()">⚖️ Bagi Rata Otomatis</button>
+      <button class="btn btn-secondary" onclick="resetKey()">↩️ Kembalikan Awal</button>
+    </div>
+
+    <div id="keyResult"></div>
+  </div>
+
+  <!-- ============== TAB 3: PROMPT FINAL ============== -->
+  <div id="tab3" class="tab-content">
+    <h2>✨ Prompt Final Gabungan (Siap Pakai)</h2>
+    <div class="info-box">
+      Prompt ini menggabungkan konfigurasi soal + deret kunci jawaban + kaidah penulisan. Klik tombol di bawah untuk menggabungkan, lalu salin.
+    </div>
+    <div style="text-align:center; margin:15px 0;">
+      <button class="btn btn-primary" onclick="combineFinal()">🔗 Gabungkan Prompt + Kunci Jawaban</button>
+      <button class="btn btn-success" onclick="copyFinal()">📋 Salin Prompt Final</button>
+    </div>
+    <div id="finalOutput"></div>
+  </div>
+
+  <footer>
+    ✨ by Abu Rahmi ✨ | Generator Soal SD + AKM + Kunci Jawaban v2.1
+  </footer>
+</div>
+
+<div id="toast" class="toast">✅ Berhasil disalin!</div>
+
+<script>
+/* ============ TAB NAVIGATION ============ */
+function switchTab(n) {
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active', i===n-1));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active', i===n-1));
+}
+
+/* ============ TOAST ============ */
+function showToast(msg='✅ Berhasil disalin!') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+/* ============ TAB 1: GENERATOR PROMPT ============ */
+function generatePrompt() {
+  const mapel = document.getElementById('mapel').value;
+  const kelas = document.getElementById('kelas').value;
+  const bab = document.getElementById('bab').value || '(belum diisi)';
+  const atp = document.getElementById('atp').value || '(belum diisi)';
+  const pg = +document.getElementById('jmlPG').value;
+  const isian = +document.getElementById('jmlIsian').value;
+  const essay = +document.getElementById('jmlEssay').value;
+  const akmPG = +document.getElementById('jmlAKMPG').value;
+  const akmIsian = +document.getElementById('jmlAKMIsian').value;
+  const akmEssay = +document.getElementById('jmlAKMEssay').value;
+
+  let l1 = +document.getElementById('l1').value || 0;
+  let l2 = +document.getElementById('l2').value || 0;
+  let l3 = +document.getElementById('l3').value || 0;
+  const total = pg + isian + essay + akmPG + akmIsian + akmEssay;
+
+  if (total === 0) {
+    document.getElementById('promptOutput').innerHTML = '<div class="review-item review-fail">⚠️ Total soal = 0. Silakan isi minimal satu jenis soal.</div>';
+    return;
+  }
+
+  if (l1 === 0 && l2 === 0 && l3 === 0) {
+    l1 = Math.round(total * 0.4);
+    l2 = Math.round(total * 0.4);
+    l3 = total - l1 - l2;
+  } else if (l1 + l2 + l3 !== total) {
+    document.getElementById('promptOutput').innerHTML = '<div class="review-item review-fail">⚠️ Total L1+L2+L3 ('+(l1+l2+l3)+') tidak sama dengan total soal ('+total+').</div>';
+    return;
+  }
+
+  const prompt = buildPromptText({mapel, kelas, bab, atp, pg, isian, essay, akmPG, akmIsian, akmEssay, l1, l2, l3, total});
+  const review = reviewKaidah({mapel, kelas, bab, atp, pg, isian, essay, akmPG, akmIsian, akmEssay});
+
+  let html = '<h3>📝 Prompt yang Dihasilkan</h3>';
+  html += '<div class="output-box" id="promptBox">' + escapeHtml(prompt) + '</div>';
+  html += '<div style="text-align:center;margin-top:10px;">';
+  html += '<button class="btn btn-success" onclick="copyText(\'promptBox\')">📋 Salin Prompt</button>';
+  html += '</div>';
+
+  html += '<h3 style="margin-top:25px;">✅ Review Kaidah Penulisan (16 Kaidah BSNP/Puspendik)</h3>';
+  html += review;
+
+  document.getElementById('promptOutput').innerHTML = html;
+}
+
+function buildPromptText(d) {
+  return `# PERINTAH PEMBUATAN SOAL SD
+
+## 📌 IDENTITAS
+- Mata Pelajaran : ${d.mapel}
+- Kelas/Semester : ${d.kelas}
+- Materi/Bab     : ${d.bab}
+
+## 🎯 TUJUAN PEMBELAJARAN (ATP)
+${d.atp}
+
+## 📋 SPESIFIKASI SOAL
+
+### A. Soal Reguler
+1. Pilihan Ganda (4 opsi A-D) : ${d.pg} soal
+2. Isian Singkat              : ${d.isian} soal
+3. Uraian / Essay             : ${d.essay} soal
+
+### B. Soal AKM (Asesmen Kompetensi Minimum)
+1. AKM Pilihan Ganda          : ${d.akmPG} soal
+2. AKM Isian                  : ${d.akmIsian} soal
+3. AKM Uraian                 : ${d.akmEssay} soal
+
+### C. Distribusi Level Kognitif (Total: ${d.total} soal)
+- L1 (Pengetahuan & Pemahaman) : ${d.l1} soal
+- L2 (Aplikasi)                : ${d.l2} soal
+- L3 (Penalaran)               : ${d.l3} soal
+
+${window._finalKey ? '## 🔑 POLA KUNCI JAWABAN PG\n' + window._finalKey + '\n' : ''}
+## 📜 KAIDAH PENULISAN YANG WAJIB DIPATUHI (16 Kaidah BSNP/Puspendik)
+
+### A. Aspek Materi
+1. Soal harus sesuai dengan indikator & ATP.
+2. Pilihan jawaban harus homogen dan logis dari segi materi.
+3. Setiap soal hanya memiliki SATU jawaban yang paling benar.
+4. Pokok soal harus dirumuskan dengan jelas dan tegas.
+5. Gambar, grafik, tabel, atau diagram harus jelas dan berfungsi.
+
+### B. Aspek Konstruksi
+#### Pilihan Ganda:
+6. Pokok soal JANGAN memberi petunjuk ke jawaban benar.
+7. Pokok soal JANGAN memakai pernyataan negatif ganda (contoh: "kecuali", "bukan").
+8. Pilihan jawaban harus homogen dari segi materi.
+9. Jawaban yang paling panjang BUKAN jaminan jawaban benar.
+10. Hindari opsi "Semua jawaban benar/salah" atau "Semua jawaban di atas benar".
+
+#### Isian Singkat:
+11. Isian harus memiliki SATU jawaban pasti (tidak ambigu).
+
+#### Essay/Uraian:
+12. Gunakan kata kerja operasional yang dapat diukur (jelaskan, analisis, hitung, bandingkan).
+
+### C. Aspek Bahasa
+13. Gunakan bahasa Indonesia yang baik dan benar (sesuai EYD).
+14. JANGAN menggunakan bahasa daerah atau istilah lokal yang tidak umum.
+15. Hindari kata/frasa yang bermakna ambigu atau multitafsir.
+16. Setiap kalimat harus komunikatif dan sesuai tingkat perkembangan siswa SD.
+
+## 💡 INSTRUKSI KHUSUS
+1. Buat soal yang kontekstual dengan kehidupan sehari-hari siswa SD.
+2. Soal AKM WAJIB menggunakan STIMULUS (teks, data, grafik, diagram, peta, atau gambar).
+3. ${window._finalKey ? 'IKUTI pola kunci jawaban PG yang telah ditentukan di atas.' : 'Variasikan kunci jawaban secara merata (A, B, C, D seimbang).'}
+4. Variasikan tingkat kesulitan dalam setiap level kognitif.
+5. Sertakan KISI-KISI lengkap sebelum naskah soal.
+
+## 📄 FORMAT OUTPUT YANG DIHARAPKAN
+
+### I. KISI-KISI SOAL
+(Tabel: No | Kompetensi | Materi | Indikator Soal | Level Kognitif | No. Soal)
+
+### II. NASKAH SOAL
+#### A. Pilihan Ganda
+1. [Pokok soal]
+   A. ...   B. ...   C. ...   D. ...
+
+#### B. Isian Singkat
+1. [Pertanyaan isian]
+
+#### C. Essay / Uraian
+1. [Pertanyaan uraian]
+
+#### D. Soal AKM (dengan Stimulus)
+[Stimulus: teks/data/grafik]
+1. [Pertanyaan AKM]
+
+### III. KUNCI JAWABAN & PEMBAHASAN
+- PG: [deret kunci]
+- Isian: [jawaban]
+- Essay: [rubrik penilaian]
+- Pembahasan lengkap untuk setiap soal`;
+}
+
+function reviewKaidah(d) {
+  const checks = [
+    { ok: d.bab && d.bab !== '(belum diisi)', msg: 'Materi/Bab telah diisi', fail: 'Materi/Bab belum diisi — soal bisa tidak terarah' },
+    { ok: d.atp && d.atp !== '(belum diisi)', msg: 'ATP telah dirumuskan', fail: 'ATP belum diisi — indikator soal tidak jelas' },
+    { ok: d.pg > 0 || d.isian > 0 || d.essay > 0, msg: 'Soal reguler dikonfigurasi', fail: 'Tidak ada soal reguler' },
+    { ok: d.pg === 0 || d.pg >= 5, msg: 'Jumlah PG proporsional', warn: 'PG terlalu sedikit (<5), pertimbangkan menambah' },
+    { ok: true, msg: 'Struktur soal lengkap (PG, Isian, Essay)' },
+    { ok: (d.akmPG + d.akmIsian + d.akmEssay) > 0, msg: 'Soal AKM dikonfigurasi', warn: 'AKM belum diisi — disarankan minimal 5 soal PG AKM' },
+    { ok: true, msg: 'Level kognitif L1, L2, L3 terdistribusi' },
+    { ok: true, msg: 'Kaidah Materi #1-5 siap dipatuhi' },
+    { ok: true, msg: 'Kaidah Konstruksi PG #6-10 siap dipatuhi' },
+    { ok: true, msg: 'Kaidah Konstruksi Isian #11 siap dipatuhi' },
+    { ok: true, msg: 'Kaidah Konstruksi Essay #12 siap dipatuhi' },
+    { ok: true, msg: 'Kaidah Bahasa #13-16 siap dipatuhi' },
+    { ok: true, msg: 'Format output terstruktur (Kisi-kisi, Naskah, Kunci)' },
+    { ok: true, msg: 'Instruksi kontekstual & stimulus AKM disertakan' },
+    { ok: true, msg: 'Pembahasan & rubrik penilaian diminta' },
+    { ok: true, msg: 'Prompt siap dikirim ke AI' }
+  ];
+
+  let html = '';
+  let pass = 0, warn = 0, fail = 0;
+  checks.forEach((c, i) => {
+    if (c.ok) { html += `<div class="review-item review-pass">✅ ${i+1}. ${c.msg}</div>`; pass++; }
+    else if (c.warn) { html += `<div class="review-item review-warn">⚠️ ${i+1}. ${c.warn}</div>`; warn++; }
+    else { html += `<div class="review-item review-fail">❌ ${i+1}. ${c.fail}</div>`; fail++; }
+  });
+
+  html += `<div class="info-box" style="margin-top:15px;">
+    <b>Rekap Review:</b>
+    <span class="badge badge-success">✅ Lulus: ${pass}</span>
+    ${warn ? `<span class="badge" style="background:#f59e0b;color:white;">⚠️ Peringatan: ${warn}</span>` : ''}
+    ${fail ? `<span class="badge badge-danger">❌ Gagal: ${fail}</span>` : ''}
+  </div>`;
+  return html;
+}
+
+function resetForm() {
+  document.getElementById('bab').value = '';
+  document.getElementById('atp').value = '';
+  document.getElementById('l1').value = '';
+  document.getElementById('l2').value = '';
+  document.getElementById('l3').value = '';
+  document.getElementById('promptOutput').innerHTML = '';
+}
+
+/* ============ TAB 2: GENERATOR KUNCI JAWABAN ============ */
+function updateKeyInputs() {
+  const n = +document.getElementById('optCount').value;
+  const letters = ['A','B','C','D','E'].slice(0, n);
+  const total = +document.getElementById('totalSoal').value || 10;
+  const base = Math.floor(total / n);
+  const rem = total % n;
+  let html = '';
+  letters.forEach((l, i) => {
+    const count = base + (i < rem ? 1 : 0);
+    html += `<div><label>Kunci ${l}</label><input type="number" id="key${l}" value="${count}" min="0" onchange="validateKeyInputs()"></div>`;
+  });
+  document.getElementById('keyInputs').innerHTML = html;
+}
+
+function autoDistribute() {
+  updateKeyInputs();
+  validateKeyInputs();
+}
+
+function validateKeyInputs() {
+  const n = +document.getElementById('optCount').value;
+  const total = +document.getElementById('totalSoal').value;
+  const letters = ['A','B','C','D','E'].slice(0, n);
+  let sum = 0;
+  letters.forEach(l => sum += (+document.getElementById('key'+l).value || 0));
+  const info = document.getElementById('keyInputs');
+  let msg = info.querySelector('.sum-info');
+  if (!msg) {
+    msg = document.createElement('div');
+    msg.className = 'sum-info';
+    msg.style.cssText = 'grid-column:1/-1;padding:10px;border-radius:8px;font-weight:600;text-align:center;';
+    info.appendChild(msg);
+  }
+  if (sum === total) {
+    msg.style.background = '#f0fdf4';
+    msg.style.color = '#065f46';
+    msg.style.border = '2px solid #10b981';
+    msg.textContent = `✅ Total kunci (${sum}) = Jumlah soal (${total})`;
+  } else {
+    msg.style.background = '#fef2f2';
+    msg.style.color = '#991b1b';
+    msg.style.border = '2px solid #ef4444';
+    msg.textContent = `❌ Total kunci (${sum}) ≠ Jumlah soal (${total}). Sesuaikan!`;
+  }
+}
+
+function resetKey() {
+  document.getElementById('keyResult').innerHTML = '';
+  autoDistribute();
+}
+
+/* ===== ALGORITMA CERDAS GENERATOR KUNCI ===== */
+function generateKey() {
+  const n = +document.getElementById('optCount').value;
+  const total = +document.getElementById('totalSoal').value;
+  const letters = ['A','B','C','D','E'].slice(0, n);
+
+  const counts = {};
+  let sum = 0;
+  letters.forEach(l => {
+    counts[l] = +document.getElementById('key'+l).value || 0;
+    sum += counts[l];
+  });
+  if (sum !== total) {
+    document.getElementById('keyResult').innerHTML = '<div class="review-item review-fail">❌ Total jumlah huruf tidak sama dengan jumlah soal!</div>';
+    return;
+  }
+
+  const result = [];
+  const remaining = {...counts};
+
+  for (let pos = 0; pos < total; pos++) {
+    const candidates = letters.filter(l => remaining[l] > 0);
+    const valid = candidates.filter(l => {
+      if (result.length >= 2 && result[result.length-1] === l && result[result.length-2] === l) return false;
+      if (result.length >= 2) {
+        const c1 = result[result.length-2].charCodeAt(0);
+        const c2 = result[result.length-1].charCodeAt(0);
+        const c3 = l.charCodeAt(0);
+        if (c1+1 === c2 && c2+1 === c3) return false;
+        if (c1-1 === c2 && c2-1 === c3) return false;
+      }
+      if (result.length >= 3) {
+        const r1 = result[result.length-3];
+        const r2 = result[result.length-2];
+        const r3 = result[result.length-1];
+        if (r1 === l && r2 === r3 && r1 !== r2) return false;
+      }
+      return true;
+    });
+
+    let pool = valid.length > 0 ? valid : candidates;
+
+    const totalRem = pool.reduce((s,l) => s + remaining[l], 0);
+    let rand = Math.random() * totalRem;
+    let chosen = pool[0];
+    for (const l of pool) {
+      rand -= remaining[l];
+      if (rand <= 0) { chosen = l; break; }
+    }
+
+    result.push(chosen);
+    remaining[chosen]--;
+  }
+
+  const validation = validateKeyRules(result, n);
+
+  let html = '<h3 style="margin-top:20px;">📊 Deret Kunci Jawaban</h3>';
+  html += '<div class="key-display">';
+  result.forEach((k, i) => {
+    html += `<div class="key-item"><span class="num">${String(i+1).padStart(2,'0')}.</span>${k}</div>`;
+  });
+  html += '</div>';
+
+  html += `<div style="text-align:center;">
+    <button class="btn btn-success" onclick="copyKeyText('full')">📋 Salin Nomor + Huruf</button>
+    <button class="btn btn-primary" onclick="copyKeyText('letter')">📋 Salin Huruf Saja</button>
+  </div>`;
+
+  html += '<h3>📈 Rekapitulasi Jumlah</h3>';
+  html += '<table class="recap-table"><tr><th>Huruf</th><th>Jumlah</th><th>Persentase</th><th>Nomor Soal</th></tr>';
+  letters.forEach(l => {
+    const nums = result.map((k,i)=>k===l?(i+1):null).filter(x=>x!==null);
+    const pct = ((counts[l]/total)*100).toFixed(1);
+    html += `<tr><td><b>${l}</b></td><td>${counts[l]}</td><td>${pct}%</td><td style="font-size:0.8rem;text-align:left;">${nums.join(', ')}</td></tr>`;
+  });
+  html += `<tr style="background:#1e40af;color:white;"><td><b>TOTAL</b></td><td><b>${total}</b></td><td><b>100%</b></td><td></td></tr>`;
+  html += '</table>';
+
+  html += '<h3>🔍 Pemeriksaan Kaidah</h3>';
+  validation.forEach(v => {
+    html += `<div class="review-item ${v.ok ? 'review-pass' : 'review-fail'}">${v.ok ? '✅' : '❌'} ${v.msg}</div>`;
+  });
+
+  window._generatedKey = result;
+  window._generatedKeyText = result.join('');
+  window._generatedKeyFull = result.map((k,i)=>`${i+1}.${k}`).join(' ');
+
+  html += `<div style="text-align:center;margin-top:20px;">
+    <button class="btn btn-primary" onclick="sendToFinal()">🔗 Kirim Kunci ke Prompt Final (Tab 3)</button>
+  </div>`;
+
+  document.getElementById('keyResult').innerHTML = html;
+}
+
+function validateKeyRules(key, n) {
+  const letters = ['A','B','C','D','E'].slice(0, n);
+  const checks = [];
+
+  checks.push({ ok: true, msg: `Total ${key.length} soal sesuai` });
+
+  const counts = {};
+  letters.forEach(l => counts[l] = key.filter(k=>k===l).length);
+  const vals = Object.values(counts);
+  const maxDiff = Math.max(...vals) - Math.min(...vals);
+  checks.push({ ok: maxDiff <= 1, msg: `Distribusi merata (selisih maks: ${maxDiff})` });
+
+  let consec = 0;
+  for (let i = 0; i < key.length - 2; i++) {
+    if (key[i] === key[i+1] && key[i] === key[i+2]) consec++;
+  }
+  checks.push({ ok: consec === 0, msg: `Tidak ada 3 huruf sama berurutan (terdeteksi: ${consec})` });
+
+  let alpha = 0;
+  for (let i = 0; i < key.length - 2; i++) {
+    const c1 = key[i].charCodeAt(0), c2 = key[i+1].charCodeAt(0), c3 = key[i+2].charCodeAt(0);
+    if ((c1+1===c2 && c2+1===c3) || (c1-1===c2 && c2-1===c3)) alpha++;
+  }
+  checks.push({ ok: alpha === 0, msg: `Tidak ada urutan alfabet ABC/CBA (terdeteksi: ${alpha})` });
+
+  let alt = 0;
+  for (let i = 0; i < key.length - 3; i++) {
+    if (key[i] === key[i+2] && key[i+1] === key[i+3] && key[i] !== key[i+1]) alt++;
+  }
+  checks.push({ ok: alt === 0, msg: `Tidak ada pola selang-seling ABAB (terdeteksi: ${alt})` });
+
+  let blockOk = true;
+  for (let start = 0; start < key.length; start += 10) {
+    const block = key.slice(start, start + 10);
+    const bc = {};
+    letters.forEach(l => bc[l] = 0);
+    block.forEach(k => bc[k]++);
+    const bvals = Object.values(bc).filter(v => v > 0 || true);
+    if (Math.max(...bvals) - Math.min(...bvals) > 3) blockOk = false;
+  }
+  checks.push({ ok: blockOk, msg: 'Sebaran merata tiap blok 10 soal' });
+
+  return checks;
+}
+
+function copyKeyText(mode) {
+  const text = mode === 'full' ? window._generatedKeyFull : window._generatedKeyText;
+  navigator.clipboard.writeText(text).then(()=>showToast('✅ Kunci jawaban disalin!'));
+}
+
+function sendToFinal() {
+  const key = window._generatedKey;
+  const n = +document.getElementById('optCount').value;
+  const letters = ['A','B','C','D','E'].slice(0, n);
+  const counts = {};
+  letters.forEach(l => counts[l] = key.filter(k=>k===l).length);
+
+  let keyInfo = `Deret Kunci: ${key.map((k,i)=>`${i+1}.${k}`).join(' ')}\n`;
+  keyInfo += `Ringkas: ${key.join('')}\n`;
+  keyInfo += `Distribusi: ` + letters.map(l=>`${l}=${counts[l]}`).join(', ');
+  window._finalKey = keyInfo;
+  showToast('✅ Kunci dikirim ke Tab 3!');
+  switchTab(3);
+  combineFinal();
+}
+
+/* ============ TAB 3: PROMPT FINAL ============ */
+function combineFinal() {
+  const mapel = document.getElementById('mapel').value;
+  const kelas = document.getElementById('kelas').value;
+  const bab = document.getElementById('bab').value || '(belum diisi)';
+  const atp = document.getElementById('atp').value || '(belum diisi)';
+  const pg = +document.getElementById('jmlPG').value;
+  const isian = +document.getElementById('jmlIsian').value;
+  const essay = +document.getElementById('jmlEssay').value;
+  const akmPG = +document.getElementById('jmlAKMPG').value;
+  const akmIsian = +document.getElementById('jmlAKMIsian').value;
+  const akmEssay = +document.getElementById('jmlAKMEssay').value;
+  let l1 = +document.getElementById('l1').value || 0;
+  let l2 = +document.getElementById('l2').value || 0;
+  let l3 = +document.getElementById('l3').value || 0;
+  const total = pg + isian + essay + akmPG + akmIsian + akmEssay;
+
+  if (l1 === 0 && l2 === 0 && l3 === 0 && total > 0) {
+    l1 = Math.round(total * 0.4);
+    l2 = Math.round(total * 0.4);
+    l3 = total - l1 - l2;
+  }
+
+  const d = {mapel, kelas, bab, atp, pg, isian, essay, akmPG, akmIsian, akmEssay, l1, l2, l3, total};
+  const finalText = buildPromptText(d);
+
+  let html = '<div class="output-box" id="finalBox">' + escapeHtml(finalText) + '</div>';
+  html += `<div style="text-align:center;margin-top:15px;">
+    <button class="btn btn-success" onclick="copyText('finalBox')">📋 Salin Prompt Final</button>
+  </div>`;
+
+  document.getElementById('finalOutput').innerHTML = html;
+}
+
+function copyFinal() {
+  const box = document.getElementById('finalBox');
+  if (!box) { showToast('⚠️ Generate dulu prompt final!'); return; }
+  navigator.clipboard.writeText(box.textContent).then(()=>showToast('✅ Prompt final disalin!'));
+}
+
+function copyText(id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.textContent).then(()=>showToast());
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ===== INIT ===== */
+updateKeyInputs();
+</script>
+</body>
+</html>
